@@ -16,8 +16,7 @@ const clickSoundUrls = [
   '/sounds/click/click4/click4_11.wav',
   '/sounds/click/click4/click4_22.wav',
   '/sounds/click/click4/click4_33.wav',
-  '/sounds/click/click4/click4_44.wav',
-  '/sounds/click/click4/click4_55.wav'
+  '/sounds/click/click4/click4_44.wav'
 ];
 
 export const useClick = () => {
@@ -25,32 +24,31 @@ export const useClick = () => {
 
   // Instead of mapping, call each useSound explicitly:
   const [play1] = useSound(clickSoundUrls[0], {
-    volume: silentMode ? 0 : 1,
-    interrupt: true
+    volume: 1,
+    interrupt: true,
+    soundEnabled: !silentMode
   });
   const [play2] = useSound(clickSoundUrls[1], {
-    volume: silentMode ? 0 : 1,
-    interrupt: true
+    volume: 1,
+    interrupt: true,
+    soundEnabled: !silentMode
   });
   const [play3] = useSound(clickSoundUrls[2], {
-    volume: silentMode ? 0 : 1,
-    interrupt: true
+    volume: 1,
+    interrupt: true,
+    soundEnabled: !silentMode
   });
   const [play4] = useSound(clickSoundUrls[3], {
-    volume: silentMode ? 0 : 1,
-    interrupt: true
-  });
-  const [play5] = useSound(clickSoundUrls[4], {
-    volume: silentMode ? 0 : 1,
-    interrupt: true
+    volume: 1,
+    interrupt: true,
+    soundEnabled: !silentMode
   });
 
-  const playFns = [play1, play2, play3, play4, play5];
-
-  const playClick = () => {
+  const playClick = useCallback(() => {
+    const playFns = [play1, play2, play3, play4];
     const idx = random.integer(0, playFns.length - 1);
     playFns[idx]();
-  };
+  }, [play1, play2, play3, play4]);
 
   return { playClick };
 };
@@ -58,12 +56,12 @@ export const useClick = () => {
 export const useCorrect = () => {
   const silentMode = usePreferencesStore(state => state.silentMode);
 
-  // This URL is static, so no need to memoize
   const successSoundUrl = '/sounds/correct.wav';
 
   const [play] = useSound(successSoundUrl, {
-    volume: silentMode ? 0 : 0.7,
-    interrupt: true
+    volume: 0.7,
+    interrupt: true,
+    soundEnabled: !silentMode
   });
 
   return { playCorrect: play };
@@ -72,15 +70,14 @@ export const useCorrect = () => {
 export const useError = () => {
   const silentMode = usePreferencesStore(state => state.silentMode);
 
-  // This URL is static, so no need to memoize
   const errorSoundUrl = '/sounds/error/error1/error1_1.wav';
 
   const [play] = useSound(errorSoundUrl, {
-    volume: silentMode ? 0 : 1,
-    interrupt: true
+    volume: 1,
+    interrupt: true,
+    soundEnabled: !silentMode
   });
 
-  // Memoize the callback so it's not recreated every render
   const playErrorTwice = useCallback(() => {
     play();
     setTimeout(() => play(), 90);
@@ -95,12 +92,12 @@ export const useError = () => {
 export const useLong = () => {
   const silentMode = usePreferencesStore(state => state.silentMode);
 
-  // This URL is static, so no need to memoize
   const longSoundUrl = '/sounds/long.wav';
 
   const [play] = useSound(longSoundUrl, {
-    volume: silentMode ? 0 : 0.2,
-    interrupt: true
+    volume: 0.2,
+    interrupt: true,
+    soundEnabled: !silentMode
   });
 
   return { playLong: play };
