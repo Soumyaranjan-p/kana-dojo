@@ -17,6 +17,7 @@ import SSRAudioButton from '@/shared/components/SSRAudioButton';
 import FuriganaText from '@/shared/components/FuriganaText';
 import { useCrazyModeTrigger } from '@/features/CrazyMode/hooks/useCrazyModeTrigger';
 import { getGlobalAdaptiveSelector } from '@/shared/lib/adaptiveSelection';
+import { useSmartReverseMode } from '@/shared/hooks/useSmartReverseMode';
 
 const random = new Random();
 
@@ -32,14 +33,10 @@ const containsKanji = (text: string): boolean => {
 interface VocabPickGameProps {
   selectedWordObjs: IVocabObj[];
   isHidden: boolean;
-  isReverse?: boolean;
 }
 
-const VocabPickGame = ({
-  selectedWordObjs,
-  isHidden,
-  isReverse = false
-}: VocabPickGameProps) => {
+const VocabPickGame = ({ selectedWordObjs, isHidden }: VocabPickGameProps) => {
+  const { isReverse, decideNextMode } = useSmartReverseMode();
   const score = useStatsStore(state => state.score);
   const setScore = useStatsStore(state => state.setScore);
 
@@ -60,45 +57,40 @@ const VocabPickGame = ({
   // Quiz type: 'meaning' or 'reading'
   const [quizType, setQuizType] = useState<'meaning' | 'reading'>('meaning');
 
-  // State management based on mode - uses weighted selection for adaptive learning
+  // State management - correctChar always stores the word (Japanese)
+  // This ensures consistency when isReverse changes dynamically
   const [correctChar, setCorrectChar] = useState(() => {
     if (selectedWordObjs.length === 0) return '';
-    const sourceArray = isReverse
-      ? selectedWordObjs.map(obj => obj.meanings[0])
-      : selectedWordObjs.map(obj => obj.word);
+    const sourceArray = selectedWordObjs.map(obj => obj.word);
     const selected = adaptiveSelector.selectWeightedCharacter(sourceArray);
     adaptiveSelector.markCharacterSeen(selected);
     return selected;
   });
 
-  // Find the correct object based on the current mode
-  const correctWordObj = isReverse
-    ? selectedWordObjs.find(obj => obj.meanings[0] === correctChar)
-    : selectedWordObjs.find(obj => obj.word === correctChar);
+  // Find the correct object - always by word since correctChar stores the word
+  const correctWordObj = selectedWordObjs.find(obj => obj.word === correctChar);
 
   const [currentWordObj, setCurrentWordObj] = useState<IVocabObj>(
     correctWordObj as IVocabObj
   );
 
-  // Determine target based on quiz type and mode
+  // What to display as the question
+  const displayChar = isReverse ? correctWordObj?.meanings[0] : correctChar;
+
+  // Determine target (correct answer) based on quiz type and mode
   const targetChar =
     quizType === 'meaning'
       ? isReverse
-        ? correctWordObj?.word
-        : correctWordObj?.meanings[0]
-      : isReverse
-      ? correctWordObj?.reading
-      : correctWordObj?.reading;
+        ? correctWordObj?.word // reverse: show meaning, answer is word
+        : correctWordObj?.meanings[0] // normal: show word, answer is meaning
+      : correctWordObj?.reading; // reading quiz: answer is always reading
 
   // Get incorrect options based on mode and quiz type
   const getIncorrectOptions = (): string[] => {
-    const incorrectWordObjs = isReverse
-      ? selectedWordObjs.filter(
-          currentWordObj => currentWordObj.meanings[0] !== correctChar
-        )
-      : selectedWordObjs.filter(
-          currentWordObj => currentWordObj.word !== correctChar
-        );
+    // Filter out the current word
+    const incorrectWordObjs = selectedWordObjs.filter(
+      obj => obj.word !== correctChar
+    );
 
     if (quizType === 'meaning') {
       return incorrectWordObjs
@@ -128,13 +120,15 @@ const VocabPickGame = ({
     []
   );
 
+  // Update shuffled options when correctChar or isReverse changes
   useEffect(() => {
     setShuffledOptions(
       [targetChar ?? '', ...getIncorrectOptions()].sort(
         () => random.real(0, 1) - 0.5
       ) as string[]
     );
-  }, [correctChar]);
+    setWrongSelectedAnswers([]);
+  }, [correctChar, isReverse, quizType]);
 
   if (!selectedWordObjs || selectedWordObjs.length === 0) {
     return null;
@@ -168,7 +162,7 @@ const VocabPickGame = ({
       generateNewCharacter();
       setFeedback(
         <>
-          <span className='text-[var(--secondary-color)]'>{`${correctChar} = ${selectedOption} `}</span>
+          <span className='text-[var(--secondary-color)]'>{`${displayChar} = ${selectedOption} `}</span>
           <CircleCheck className='inline text-[var(--main-color)]' />
         </>
       );
@@ -177,7 +171,7 @@ const VocabPickGame = ({
       handleWrongAnswer(selectedOption);
       setFeedback(
         <>
-          <span className='text-[var(--secondary-color)]'>{`${correctChar} ≠ ${selectedOption} `}</span>
+          <span className='text-[var(--secondary-color)]'>{`${displayChar} ≠ ${selectedOption} `}</span>
           <CircleX className='inline text-[var(--main-color)]' />
         </>
       );
@@ -197,6 +191,8 @@ const VocabPickGame = ({
     triggerCrazyMode();
     // Update adaptive weight system - reduces probability of mastered words
     adaptiveSelector.updateCharacterWeight(correctChar, true);
+    // Smart algorithm decides next mode based on performance
+    decideNextMode(true);
   };
 
   const handleWrongAnswer = (selectedOption: string) => {
@@ -212,26 +208,25 @@ const VocabPickGame = ({
     triggerCrazyMode();
     // Update adaptive weight system - increases probability of difficult words
     adaptiveSelector.updateCharacterWeight(correctChar, false);
+    // Smart algorithm decides next mode based on performance
+    decideNextMode(false);
   };
 
   const generateNewCharacter = () => {
-    const sourceArray = isReverse
-      ? selectedWordObjs.map(obj => obj.meanings[0])
-      : selectedWordObjs.map(obj => obj.word);
+    // Always select from words - the correctWordObj lookup will handle the mode
+    const sourceArray = selectedWordObjs.map(obj => obj.word);
 
     // Use weighted selection - prioritizes words user struggles with
     const newChar = adaptiveSelector.selectWeightedCharacter(
       sourceArray,
-      correctChar
+      // Exclude current word to avoid repetition
+      correctWordObj?.word
     );
     adaptiveSelector.markCharacterSeen(newChar);
     setCorrectChar(newChar);
 
     // Get the actual word for the new character to check if it contains kanji
-    const newWordObj = isReverse
-      ? selectedWordObjs.find(obj => obj.meanings[0] === newChar)
-      : selectedWordObjs.find(obj => obj.word === newChar);
-
+    const newWordObj = selectedWordObjs.find(obj => obj.word === newChar);
     const wordToCheck = newWordObj?.word ?? '';
 
     // Only toggle to reading quiz if the word contains kanji
@@ -244,7 +239,7 @@ const VocabPickGame = ({
     }
   };
 
-  const gameMode = isReverse ? 'reverse pick' : 'pick';
+  const gameMode = 'pick';
   const displayCharLang =
     isReverse && quizType === 'meaning' ? undefined : 'ja';
   const optionLang =
@@ -274,13 +269,13 @@ const VocabPickGame = ({
             <span className='text-sm text-[var(--secondary-color)] mb-2'>
               {quizType === 'meaning'
                 ? isReverse
-                  ? 'What is the meaning?'
-                  : 'What is the meaning?'
+                  ? 'What is the word?' // reverse: given meaning, find word
+                  : 'What is the meaning?' // normal: given word, find meaning
                 : 'What is the reading?'}
             </span>
             <div className='flex flex-row justify-center items-center gap-1'>
               <FuriganaText
-                text={correctChar}
+                text={displayChar ?? ''}
                 reading={
                   !isReverse && quizType === 'meaning'
                     ? correctWordObj?.reading

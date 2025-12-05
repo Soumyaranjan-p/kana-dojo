@@ -135,7 +135,7 @@ const CollectionSelector = () => {
     });
   }, [sets]);
 
-  const gameModes = ['Pick', 'Anti-Pick', 'Type'];
+  const gameModes = ['Pick', 'Type'];
 
   return (
     <div className='flex flex-col'>
@@ -249,17 +249,6 @@ const CollectionSelector = () => {
                   <MousePointerClick
                     size={20}
                     className={clsx(
-                      isSelected
-                        ? 'text-[var(--background-color)]'
-                        : 'text-[var(--main-color)] motion-safe:animate-pulse'
-                    )}
-                  />
-                )}
-                {gameMode.toLowerCase() === 'anti-pick' && (
-                  <MousePointerClick
-                    size={20}
-                    className={clsx(
-                      'scale-x-[-1]',
                       isSelected
                         ? 'text-[var(--background-color)]'
                         : 'text-[var(--main-color)] motion-safe:animate-pulse'

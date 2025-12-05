@@ -57,7 +57,7 @@ const GameModes = () => {
       : () => {};
 
   // const gameModes = ['Pick', 'Reverse-Pick', 'Input', 'Reverse-Input'];
-  const gameModes = ['Pick', 'Anti-Pick', 'Type'];
+  const gameModes = ['Pick', 'Type'];
 
   return (
     <div className='flex rounded-2xl bg-[var(--card-color)]  border-[var(--border-color)] px-4 py-3 gap-4 flex-col md:flex-row'>

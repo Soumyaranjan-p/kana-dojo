@@ -1,6 +1,6 @@
 'use client';
 import clsx from 'clsx';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { kana } from '@/features/Kana/data/kana';
 import useKanaStore from '@/features/Kana/store/useKanaStore';
 import { CircleCheck, CircleX } from 'lucide-react';
@@ -15,6 +15,7 @@ import useStatsStore from '@/features/Progress/store/useStatsStore';
 import Stars from '@/shared/components/Game/Stars';
 import { useCrazyModeTrigger } from '@/features/CrazyMode/hooks/useCrazyModeTrigger';
 import { getGlobalAdaptiveSelector } from '@/shared/lib/adaptiveSelection';
+import { useSmartReverseMode } from '@/shared/hooks/useSmartReverseMode';
 
 const random = new Random();
 
@@ -23,10 +24,10 @@ const adaptiveSelector = getGlobalAdaptiveSelector();
 
 interface PickGameProps {
   isHidden: boolean;
-  isReverse?: boolean;
 }
 
-const PickGame = ({ isHidden, isReverse = false }: PickGameProps) => {
+const PickGame = ({ isHidden }: PickGameProps) => {
+  const { isReverse, decideNextMode } = useSmartReverseMode();
   const score = useStatsStore(state => state.score);
   const setScore = useStatsStore(state => state.setScore);
 
@@ -241,6 +242,8 @@ const PickGame = ({ isHidden, isReverse = false }: PickGameProps) => {
     triggerCrazyMode();
     // Update adaptive weight system - reduces probability of mastered characters
     adaptiveSelector.updateCharacterWeight(correctChar, true);
+    // Smart algorithm decides next mode based on performance
+    decideNextMode(true);
   };
 
   const handleWrongAnswer = (selectedChar: string) => {
@@ -257,10 +260,12 @@ const PickGame = ({ isHidden, isReverse = false }: PickGameProps) => {
     triggerCrazyMode();
     // Update adaptive weight system - increases probability of difficult characters
     adaptiveSelector.updateCharacterWeight(currentChar, false);
+    // Smart algorithm decides next mode based on performance
+    decideNextMode(false);
   };
 
   const displayChar = isReverse ? correctRomajiCharReverse : correctKanaChar;
-  const gameMode = isReverse ? 'reverse pick' : 'pick';
+  const gameMode = 'pick';
 
   return (
     <div

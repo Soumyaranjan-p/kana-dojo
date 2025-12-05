@@ -17,6 +17,7 @@ import SSRAudioButton from '@/shared/components/SSRAudioButton';
 import FuriganaText from '@/shared/components/FuriganaText';
 import { useCrazyModeTrigger } from '@/features/CrazyMode/hooks/useCrazyModeTrigger';
 import { getGlobalAdaptiveSelector } from '@/shared/lib/adaptiveSelection';
+import { useSmartReverseMode } from '@/shared/hooks/useSmartReverseMode';
 
 const random = new Random();
 
@@ -26,14 +27,10 @@ const adaptiveSelector = getGlobalAdaptiveSelector();
 interface KanjiPickGameProps {
   selectedKanjiObjs: IKanjiObj[];
   isHidden: boolean;
-  isReverse?: boolean;
 }
 
-const KanjiPickGame = ({
-  selectedKanjiObjs,
-  isHidden,
-  isReverse = false
-}: KanjiPickGameProps) => {
+const KanjiPickGame = ({ selectedKanjiObjs, isHidden }: KanjiPickGameProps) => {
+  const { isReverse, decideNextMode } = useSmartReverseMode();
   const score = useStatsStore(state => state.score);
   const setScore = useStatsStore(state => state.setScore);
 
@@ -51,44 +48,48 @@ const KanjiPickGame = ({
   const { playErrorTwice } = useError();
   const { trigger: triggerCrazyMode } = useCrazyModeTrigger();
 
-  // State management based on mode - uses weighted selection for adaptive learning
+  // State management - correctChar always stores the kanji character
+  // This ensures consistency when isReverse changes dynamically
   const [correctChar, setCorrectChar] = useState(() => {
     if (selectedKanjiObjs.length === 0) return '';
-    const sourceArray = isReverse
-      ? selectedKanjiObjs.map(obj => obj.meanings[0])
-      : selectedKanjiObjs.map(obj => obj.kanjiChar);
+    const sourceArray = selectedKanjiObjs.map(obj => obj.kanjiChar);
     const selected = adaptiveSelector.selectWeightedCharacter(sourceArray);
     adaptiveSelector.markCharacterSeen(selected);
     return selected;
   });
 
-  // Find the correct object based on the current mode
-  const correctKanjiObj = isReverse
-    ? selectedKanjiObjs.find(obj => obj.meanings[0] === correctChar)
-    : selectedKanjiObjs.find(obj => obj.kanjiChar === correctChar);
+  // Find the correct object - always by kanjiChar since correctChar stores the kanji
+  const correctKanjiObj = selectedKanjiObjs.find(
+    obj => obj.kanjiChar === correctChar
+  );
 
   const [currentKanjiObj, setCurrentKanjiObj] = useState<IKanjiObj>(
     correctKanjiObj as IKanjiObj
   );
 
+  // What to display as the question
+  const displayChar = isReverse ? correctKanjiObj?.meanings[0] : correctChar;
+
+  // Target (correct answer) based on mode
   const targetChar = isReverse
-    ? correctKanjiObj?.kanjiChar
-    : correctKanjiObj?.meanings?.[0];
+    ? correctKanjiObj?.kanjiChar // reverse: show meaning, answer is kanji
+    : correctKanjiObj?.meanings?.[0]; // normal: show kanji, answer is meaning
 
   // Get incorrect options based on mode
   const getIncorrectOptions = () => {
+    // Filter out the current kanji
+    const incorrectKanjiObjs = selectedKanjiObjs.filter(
+      obj => obj.kanjiChar !== correctChar
+    );
+
     if (!isReverse) {
-      const incorrectKanjiObjs = selectedKanjiObjs.filter(
-        currentKanjiObj => currentKanjiObj.kanjiChar !== correctChar
-      );
+      // Normal mode: answers are meanings
       return incorrectKanjiObjs
         .map(obj => obj.meanings[0])
         .sort(() => random.real(0, 1) - 0.5)
         .slice(0, 2);
     } else {
-      const incorrectKanjiObjs = selectedKanjiObjs.filter(
-        currentKanjiObj => currentKanjiObj.meanings[0] !== correctChar
-      );
+      // Reverse mode: answers are kanji characters
       return incorrectKanjiObjs
         .map(obj => obj.kanjiChar)
         .sort(() => random.real(0, 1) - 0.5)
@@ -110,13 +111,15 @@ const KanjiPickGame = ({
     []
   );
 
+  // Update shuffled options when correctChar or isReverse changes
   useEffect(() => {
     setShuffledOptions(
       [targetChar, ...getIncorrectOptions()].sort(
         () => random.real(0, 1) - 0.5
       ) as string[]
     );
-  }, [correctChar]);
+    setWrongSelectedAnswers([]);
+  }, [correctChar, isReverse]);
 
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -150,7 +153,7 @@ const KanjiPickGame = ({
       generateNewCharacter();
       setFeedback(
         <>
-          <span className='text-[var(--secondary-color)]'>{`${correctChar} = ${selectedOption} `}</span>
+          <span className='text-[var(--secondary-color)]'>{`${displayChar} = ${selectedOption} `}</span>
           <CircleCheck className='inline text-[var(--main-color)]' />
         </>
       );
@@ -158,7 +161,7 @@ const KanjiPickGame = ({
       handleWrongAnswer(selectedOption);
       setFeedback(
         <>
-          <span className='text-[var(--secondary-color)]'>{`${correctChar} ≠ ${selectedOption} `}</span>
+          <span className='text-[var(--secondary-color)]'>{`${displayChar} ≠ ${selectedOption} `}</span>
           <CircleX className='inline text-[var(--main-color)]' />
         </>
       );
@@ -180,6 +183,8 @@ const KanjiPickGame = ({
     triggerCrazyMode();
     // Update adaptive weight system - reduces probability of mastered characters
     adaptiveSelector.updateCharacterWeight(correctChar, true);
+    // Smart algorithm decides next mode based on performance
+    decideNextMode(true);
   };
 
   const handleWrongAnswer = (selectedOption: string) => {
@@ -195,12 +200,13 @@ const KanjiPickGame = ({
     triggerCrazyMode();
     // Update adaptive weight system - increases probability of difficult characters
     adaptiveSelector.updateCharacterWeight(correctChar, false);
+    // Smart algorithm decides next mode based on performance
+    decideNextMode(false);
   };
 
   const generateNewCharacter = () => {
-    const sourceArray = isReverse
-      ? selectedKanjiObjs.map(obj => obj.meanings[0])
-      : selectedKanjiObjs.map(obj => obj.kanjiChar);
+    // Always select from kanji characters - correctChar stores the kanji
+    const sourceArray = selectedKanjiObjs.map(obj => obj.kanjiChar);
 
     // Use weighted selection - prioritizes characters user struggles with
     const newChar = adaptiveSelector.selectWeightedCharacter(
@@ -211,7 +217,7 @@ const KanjiPickGame = ({
     setCorrectChar(newChar);
   };
 
-  const gameMode = isReverse ? 'reverse pick' : 'pick';
+  const gameMode = 'pick';
   const displayCharLang = isReverse ? undefined : 'ja';
 
   return (
@@ -235,7 +241,7 @@ const KanjiPickGame = ({
         <>
           <div className='flex flex-row justify-center items-center gap-1'>
             <FuriganaText
-              text={correctChar}
+              text={displayChar ?? ''}
               reading={
                 !isReverse
                   ? correctKanjiObj?.onyomi[0] || correctKanjiObj?.kunyomi[0]

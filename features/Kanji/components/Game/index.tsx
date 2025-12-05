@@ -25,12 +25,6 @@ const Game = () => {
       <Return isHidden={showStats} href='/kanji' gameMode={gameMode} />
       {gameMode.toLowerCase() === 'pick' ? (
         <Pick selectedKanjiObjs={selectedKanjiObjs} isHidden={showStats} />
-      ) : gameMode.toLowerCase() === 'anti-pick' ? (
-        <Pick
-          selectedKanjiObjs={selectedKanjiObjs}
-          isHidden={showStats}
-          isReverse={true}
-        />
       ) : gameMode.toLowerCase() === 'type' ? (
         <Input selectedKanjiObjs={selectedKanjiObjs} isHidden={showStats} />
       ) : gameMode.toLowerCase() === 'anti-type' ? (

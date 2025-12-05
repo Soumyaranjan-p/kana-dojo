@@ -26,12 +26,6 @@ const Game = () => {
       <Return isHidden={showStats} href='/vocabulary' gameMode={gameMode} />
       {gameMode.toLowerCase() === 'pick' ? (
         <Pick selectedWordObjs={selectedVocabObjs} isHidden={showStats} />
-      ) : gameMode.toLowerCase() === 'anti-pick' ? (
-        <Pick
-          selectedWordObjs={selectedVocabObjs}
-          isHidden={showStats}
-          isReverse={true}
-        />
       ) : gameMode.toLowerCase() === 'type' ? (
         <Input selectedWordObjs={selectedVocabObjs} isHidden={showStats} />
       ) : gameMode.toLowerCase() === 'anti-type' ? (

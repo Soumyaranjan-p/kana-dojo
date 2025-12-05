@@ -29,8 +29,6 @@ const Game = () => {
       <Return isHidden={showStats} href='/kana' gameMode={gameMode} />
       {gameMode.toLowerCase() === 'pick' ? (
         <Pick isHidden={showStats} />
-      ) : gameMode.toLowerCase() === 'anti-pick' ? (
-        <Pick isHidden={showStats} isReverse={true} />
       ) : gameMode.toLowerCase() === 'type' ? (
         <Input isHidden={showStats} />
       ) : gameMode.toLowerCase() === 'anti-type' ? (
