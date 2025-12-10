@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { Fragment, lazy, Suspense, useState, useEffect } from 'react';
 import { Link } from '@/core/i18n/routing';
 import Banner from './Banner';
@@ -78,7 +78,7 @@ const MainMenu = () => {
 
     // {
     //   name_en: 'Sentences',
-    //   name_ja: '文',
+    //   name_ja: 'цЦЗ',
     //   href: '/sentences'
     // }
   ];
@@ -87,7 +87,8 @@ const MainMenu = () => {
     { name: 'terms', href: '/terms', icon: ScrollText },
     { name: 'privacy', href: '/privacy', icon: Cookie },
     { name: 'security', href: '/security', icon: FileLock2 },
-    { name: 'patch notes', href: '/patch-notes', icon: FileDiff }
+    { name: 'patch notes', href: '/patch-notes', icon: FileDiff },
+    { name: 'credits', href: '/credits', icon: Sparkle }
   ];
 
   return (
@@ -283,7 +284,7 @@ const MainMenu = () => {
         className={clsx(
           'fixed bottom-0 md:bottom-6 left-0 right-0 z-50',
           'max-md:flex justify-center gap-2',
-          ' max-md:border-t-2 border-[var(--border-color)]',
+          'max-md:border-t-2 border-[var(--border-color)]',
           'px-2 sm:px-4 py-2',
           'flex items-center justify-between max-md:bg-[var(--background-color)]',
           expandDecorations && 'hidden'
@@ -294,7 +295,10 @@ const MainMenu = () => {
             <Link
               href={link.href}
               key={i}
-              className='hover:cursor-pointer flex flex-row gap-1 items-center text-[var(--secondary-color)] hover:text-[var(--main-color)]'
+              className={clsx(
+                'hover:cursor-pointer flex flex-row gap-1 items-center text-[var(--secondary-color)] hover:text-[var(--main-color)]',
+                link.name === 'credits' && 'hidden lg:flex'
+              )}
               onClick={() => playClick()}
             >
               <link.icon className='size-4' />
