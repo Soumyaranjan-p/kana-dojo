@@ -65,7 +65,8 @@ const Sidebar = () => {
         'max-lg:bg-[var(--card-color)]',
         'z-50',
         'max-lg:border-t-2 border-[var(--border-color)] max-lg:py-2 max-lg:justify-evenly max-lg:items-center',
-        'lg:border-r-1 lg:h-auto lg:w-0 lg:px-3'
+        'lg:border-r-1 lg:h-auto lg:px-3',
+        'lg:pb-12'
       )}
     >
       <h1
