@@ -5,6 +5,7 @@ import {
   Brain,
   CircleStar,
   CloudRain,
+  Ghost,
   House,
   Keyboard,
   Languages,
@@ -73,6 +74,7 @@ const secondaryNavSections: NavSection[] = [
     title: 'Experiments',
     items: [
       { href: '/experiments', label: 'All Experiments', icon: Sparkles },
+      { href: '/experiments/runner', label: 'Yokai Run', icon: Ghost },
       { href: '/calligraphy', label: ' Calligraphy', charIcon: '書' },
       { href: '/zen', label: 'Zen Mode', icon: Leaf },
       { href: '/experiments/breathing', label: 'Breathing', icon: Wind },
