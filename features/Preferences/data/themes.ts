@@ -767,6 +767,12 @@ const baseThemeSets: BaseThemeGroup[] = [
         backgroundColor: 'oklch(11.0% 0.052 270.0 / 1)',
         mainColor: 'oklch(82.0% 0.255 12.0 / 1)',
         secondaryColor: 'oklch(92.0% 0.223 311.0 / 1)'
+      },
+      {
+        id: 'runousei',
+        backgroundColor: 'oklch(6.5% 0.027 256.5 / 1)', // graphite obsidian
+        mainColor: 'oklch(84.0% 0.190 145.0 / 1)', // starstream viridian
+        secondaryColor: 'oklch(82.0% 0.213 52.0 / 1)' // nova eruption orange
       }
     ]
   },
