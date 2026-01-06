@@ -76,6 +76,8 @@ const KanjiInputGame = ({
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  // Guard to prevent Enter key repeat from immediately triggering continue after correct answer
+  const justAnsweredRef = useRef(false);
 
   const [inputValue, setInputValue] = useState('');
   const [bottomBarState, setBottomBarState] = useState<BottomBarState>('check');
@@ -126,6 +128,11 @@ const KanjiInputGame = ({
       const isSpace = event.code === 'Space' || event.key === ' ';
 
       if (isEnter) {
+        // Guard against Enter key repeat immediately after correct answer
+        if (justAnsweredRef.current) {
+          event.preventDefault();
+          return;
+        }
         // Allow Enter to trigger Next button when correct
         if (bottomBarState === 'correct') {
           event.preventDefault();
@@ -206,6 +213,12 @@ const KanjiInputGame = ({
     resetWrongStreak();
     setBottomBarState('correct');
     setDisplayAnswerSummary(true);
+
+    // Set guard to prevent Enter key repeat from immediately triggering continue
+    justAnsweredRef.current = true;
+    setTimeout(() => {
+      justAnsweredRef.current = false;
+    }, 300);
 
     // Set feedback for the answer summary
     const displayText = isReverse ? correctKanjiObj?.meanings[0] : correctChar;
