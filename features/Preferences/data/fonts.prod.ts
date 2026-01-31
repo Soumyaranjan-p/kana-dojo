@@ -39,6 +39,7 @@
 
 const notoSansJP = Noto_Sans_JP({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
   fallback: ['system-ui', 'sans-serif'],
@@ -46,6 +47,7 @@ const notoSansJP = Noto_Sans_JP({
 
 const zenMaruGothic = Zen_Maru_Gothic({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: true,
   fallback: ['system-ui', 'sans-serif'],
@@ -53,6 +55,7 @@ const zenMaruGothic = Zen_Maru_Gothic({
 
 const rampartOne = Rampart_One({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -60,6 +63,7 @@ const rampartOne = Rampart_One({
 
 const zenKurenaido = Zen_Kurenaido({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -67,6 +71,7 @@ const zenKurenaido = Zen_Kurenaido({
 
 const kleeOne = Klee_One({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -74,6 +79,7 @@ const kleeOne = Klee_One({
 
 const dotGothic16 = DotGothic16({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -81,6 +87,7 @@ const dotGothic16 = DotGothic16({
 
 const kiwiMaru = Kiwi_Maru({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -88,6 +95,7 @@ const kiwiMaru = Kiwi_Maru({
 
 const pottaOne = Potta_One({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -95,6 +103,7 @@ const pottaOne = Potta_One({
 
 const hachiMaruPop = Hachi_Maru_Pop({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -102,6 +111,7 @@ const hachiMaruPop = Hachi_Maru_Pop({
 
 const yujiMai = Yuji_Mai({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -109,6 +119,7 @@ const yujiMai = Yuji_Mai({
 
 const rocknRollOne = RocknRoll_One({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -116,6 +127,7 @@ const rocknRollOne = RocknRoll_One({
 
 const reggaeOne = Reggae_One({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -123,6 +135,7 @@ const reggaeOne = Reggae_One({
 
 const stick = Stick({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -130,6 +143,7 @@ const stick = Stick({
 
 const mPlusRounded1c = M_PLUS_Rounded_1c({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -137,6 +151,7 @@ const mPlusRounded1c = M_PLUS_Rounded_1c({
 
 const mPlus1 = M_PLUS_1({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -144,24 +159,28 @@ const mPlus1 = M_PLUS_1({
 
 const yuseiMagic = Yusei_Magic({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
 });
 const delaGothicOne = Dela_Gothic_One({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
 });
 const newTegomin = New_Tegomin({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
 });
 const kosugiMaru = Kosugi_Maru({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -169,6 +188,7 @@ const kosugiMaru = Kosugi_Maru({
 
 const hinaMincho = Hina_Mincho({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -176,6 +196,7 @@ const hinaMincho = Hina_Mincho({
 
 const shipporiMincho = Shippori_Mincho({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -183,6 +204,7 @@ const shipporiMincho = Shippori_Mincho({
 
 const kaiseiDecol = Kaisei_Decol({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -190,6 +212,7 @@ const kaiseiDecol = Kaisei_Decol({
 
 const mochiyPopOne = Mochiy_Pop_One({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -197,6 +220,7 @@ const mochiyPopOne = Mochiy_Pop_One({
 
 const yujiBoku = Yuji_Boku({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -204,6 +228,7 @@ const yujiBoku = Yuji_Boku({
 
 const kaiseiHarunoUmi = Kaisei_HarunoUmi({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -211,6 +236,7 @@ const kaiseiHarunoUmi = Kaisei_HarunoUmi({
 
 const sawarabiGothic = Sawarabi_Gothic({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -218,6 +244,7 @@ const sawarabiGothic = Sawarabi_Gothic({
 
 const zenOldMincho = Zen_Old_Mincho({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -225,6 +252,7 @@ const zenOldMincho = Zen_Old_Mincho({
 
 const sawarabiMincho = Sawarabi_Mincho({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -232,6 +260,7 @@ const sawarabiMincho = Sawarabi_Mincho({
 
 const zenAntique = Zen_Antique({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -239,6 +268,7 @@ const zenAntique = Zen_Antique({
 
 const kaiseiTokumin = Kaisei_Tokumin({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -246,6 +276,7 @@ const kaiseiTokumin = Kaisei_Tokumin({
 
 const yujiSyuku = Yuji_Syuku({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -255,6 +286,7 @@ const yujiSyuku = Yuji_Syuku({
 
 const murecho = Murecho({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -262,6 +294,7 @@ const murecho = Murecho({
 
 const kaiseiOpti = Kaisei_Opti({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -269,6 +302,7 @@ const kaiseiOpti = Kaisei_Opti({
 
 const bIZUDMincho = BIZ_UDMincho({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
@@ -276,6 +310,7 @@ const bIZUDMincho = BIZ_UDMincho({
 
 const shipporiAntique = Shippori_Antique({
   weight: ['400'],
+  subsets: ['latin'],
   display: 'swap',
   preload: false,
   fallback: ['system-ui', 'sans-serif'],
