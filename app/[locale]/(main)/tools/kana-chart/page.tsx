@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import KanaChartDisplay from './KanaChartDisplay';
 import { routing } from '@/core/i18n/routing';
+import { BreadcrumbSchema } from '@/shared/components/SEO/BreadcrumbSchema';
 
 export function generateStaticParams() {
   return routing.locales.map(locale => ({ locale }));
@@ -18,11 +19,27 @@ export async function generateMetadata() {
   };
 }
 
-export default async function KanaChartPage() {
+export default async function KanaChartPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   const t = await getTranslations('kanaChart');
 
   return (
-    <div className='mx-auto max-w-7xl px-4 py-8'>
+    <>
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: `https://kanadojo.com/${locale}` },
+          { name: 'Tools', url: `https://kanadojo.com/${locale}/tools` },
+          {
+            name: 'Kana Chart',
+            url: `https://kanadojo.com/${locale}/tools/kana-chart`,
+          },
+        ]}
+      />
+      <div className='mx-auto max-w-7xl px-4 py-8'>
       <h1 className='mb-4 text-center text-4xl font-bold text-(--main-color)'>
         {t('title')}
       </h1>
@@ -60,5 +77,6 @@ export default async function KanaChartPage() {
         </section>
       </div>
     </div>
+    </>
   );
 }

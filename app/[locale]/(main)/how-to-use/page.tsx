@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { routing } from '@/core/i18n/routing';
+import { BreadcrumbSchema } from '@/shared/components/SEO/BreadcrumbSchema';
+import { HowToSchema } from '@/shared/components/SEO/HowToSchema';
 
 export function generateStaticParams() {
   return routing.locales.map(locale => ({ locale }));
@@ -17,9 +19,53 @@ export async function generateMetadata() {
   };
 }
 
-export default async function HowToUsePage() {
+export default async function HowToUsePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
   return (
-    <div className='mx-auto max-w-4xl px-4 py-8'>
+    <>
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: `https://kanadojo.com/${locale}` },
+          {
+            name: 'How to Use',
+            url: `https://kanadojo.com/${locale}/how-to-use`,
+          },
+        ]}
+      />
+      <HowToSchema
+        name='How to Learn Japanese with KanaDojo'
+        description='A step-by-step guide to using KanaDojo for learning Japanese Hiragana, Katakana, Kanji, and Vocabulary effectively.'
+        totalTime='PT30M'
+        estimatedCost='0'
+        steps={[
+          {
+            name: 'Choose your learning area',
+            text: 'Select Kana, Kanji, or Vocabulary from the main menu based on your current level and learning goals.',
+          },
+          {
+            name: 'Select specific content to practice',
+            text: 'Pick the characters or words you want to study. For Kana, start with Hiragana Base. For Kanji, start with JLPT N5. For Vocabulary, choose a JLPT level.',
+          },
+          {
+            name: 'Pick a training mode',
+            text: 'Choose from multiple training modes: standard practice, Blitz (speed challenge), or Gauntlet (endurance challenge). Each mode tests your knowledge differently.',
+          },
+          {
+            name: 'Practice and track your progress',
+            text: 'Complete practice sessions and review your accuracy, speed, and mastered items in the Progress section. Your data is saved automatically in your browser.',
+          },
+          {
+            name: 'Customize your experience',
+            text: 'Visit Preferences to change themes, fonts, and other settings. KanaDojo offers 100+ themes to personalize your learning environment.',
+          },
+        ]}
+      />
+      <div className='mx-auto max-w-4xl px-4 py-8'>
       <h1 className='mb-4 text-center text-4xl font-bold text-(--main-color)'>
         How to Use KanaDojo
       </h1>
@@ -451,5 +497,6 @@ export default async function HowToUsePage() {
         </section>
       </div>
     </div>
+    </>
   );
 }

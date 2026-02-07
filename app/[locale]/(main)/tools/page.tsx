@@ -2,6 +2,7 @@ import { routing } from '@/core/i18n/routing';
 import { Link } from '@/core/i18n/routing';
 import { FileJson, Grid3x3 } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
+import { BreadcrumbSchema } from '@/shared/components/SEO/BreadcrumbSchema';
 
 export function generateStaticParams() {
   return routing.locales.map(locale => ({ locale }));
@@ -43,9 +44,22 @@ const tools: Tool[] = [
   },
 ];
 
-export default async function ToolsPage() {
+export default async function ToolsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
   return (
-    <div className='mx-auto max-w-7xl px-4 py-8'>
+    <>
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: `https://kanadojo.com/${locale}` },
+          { name: 'Tools', url: `https://kanadojo.com/${locale}/tools` },
+        ]}
+      />
+      <div className='mx-auto max-w-7xl px-4 py-8'>
       <h1 className='mb-4 text-center text-4xl font-bold text-(--main-color)'>
         Japanese Learning Tools
       </h1>
@@ -108,5 +122,6 @@ export default async function ToolsPage() {
         </section>
       </div>
     </div>
+    </>
   );
 }

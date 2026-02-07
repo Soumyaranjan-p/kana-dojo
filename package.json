@@ -23,6 +23,8 @@
     "check": "tsc --noEmit --pretty && eslint . --ext .ts,.tsx",
     "generate:constants": "tsx scripts/generateConstants.ts",
     "anki:convert": "tsx scripts/anki-converter.ts",
+    "seo:check": "tsx scripts/seo-health-check.ts",
+    "seo:check:live": "tsx scripts/seo-health-check.ts --live",
     "analyze": "ANALYZE=true npm run build",
     "bundle:check": "node scripts/bundle/check-bundle-size.js",
     "storybook": "storybook dev -p 6006",
